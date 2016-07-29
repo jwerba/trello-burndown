@@ -1,0 +1,17 @@
+{
+    "trelloInfo": {
+        "applicationKey": "[YOUR_APP_KEY]",
+        "userToken": "[YOUR_USER_TOKEN]",
+        "boardId": "[YOUR_BOARD_ID]"
+    },
+    "port": 80,
+    "template": "default_ajax.template",
+    "home_template": "home.template",
+    "html_title": "Burndown chart generator",
+    "html_header": "Burndown for sprint ",
+    "enableWorkers": true,
+    "storage": {
+        "provider": "local/fsProvider.js",
+        "settings": { }
+    }
+}

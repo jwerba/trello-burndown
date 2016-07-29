@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>{{title}}</title>
+		<meta name="viewport" content="width=device-width">
+
+		<link rel="stylesheet" href="/static/default.css">
+		<link href="/static/bootstrap.min.css" rel="stylesheet">
+		<link href="/static/daterangepicker.css" rel="stylesheet">
+		<link href="/static/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+		<style>
+	      body {
+	        padding-top: 60px; 
+	      }
+	    </style>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="/static/bootstrap.min.js"></script>
+		<script src="/static/date.js"></script>
+		<script src="/static/daterangepicker.js"></script>
+		<script src="/static/bootstrap-datetimepicker.min.js"></script>
+		<script src="/static/knockout-2.2.1.js"></script>
+		<script src="/static/trello-burndown.js" defer="defer"></script>
+	</head>
+	<body>
+
+		{{>menu.template}}
+
+		<div class="container">
+			
+			<h2>Add new sprint</h2>
+
+			<div class="alert alert-error" data-bind="visible: isErrorMessageVisible">
+				<button type="button" class="close" data-hide="alert">&times;</button>
+				<strong>Error! </strong><span data-bind="text: message"></span>
+			</div>
+
+			<div class="alert alert-success" data-bind="visible: isInfoMessageVisible">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<strong>Well done! </strong><span data-bind="text: message"></span>
+			</div>
+			
+			<form class="form-horizontal" data-bind="submit: addSprint">
+				<div class="control-group">
+					<label class="control-label" for="inputName">Sprint name</label>
+					<div class="controls">
+						<input class="input-xxlarge" id="inputName" type="text" placeholder="Name of the sprint" required data-bind="value: sprint.name">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputName">Board ID</label>
+					<div class="controls">
+						<input class="input-xxlarge" id="inputName" type="text" placeholder="Defaults to that set in settings.json" data-bind="value: sprint.boardId">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="listName">List names</label>
+					<div class="controls">
+						<input class="input-xlarge" id="listName" type="text" placeholder="Name of list" data-bind="value: currentList">
+						<a href="#" data-bind="click: addSprintList">Add</a>
+					</div>
+					<div class="controls" data-bind="visible: sprint.lists().length > 0">
+						<ul class="unstyled" data-bind="foreach: sprint.lists">
+							<li>
+								<span data-bind="text: name"></span>
+								<a href="#" data-bind="click: $parent.removeSprintList">Delete</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="dateRange">Date range</label>
+					<div class="controls">
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-calendar"></i></span><input type="text" name="dateRange" id="dateRange" required/>
+							<input type="text" id="dateRangeInvisible" data-bind="value: dateRange" style="display:none"/>
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Selected dates</label>
+					<div data-bind="foreach: sprint.dates">
+						<div class="controls">
+							<div class="input-prepend input-append">
+								<span class="add-on"><i class="icon-calendar"></i></span>
+								<input type="text" data-bind="value: day" disabled>
+								<span class="add-on"><input type="checkbox" data-bind="checked: isWorkDay"></span>
+								<span class="add-on"><input type="checkbox" data-bind="checked: include"></span>
+							</div>
+						</div>
+					</div>
+					<div class="controls" data-bind="visible: sprint.dates().length > 0">
+						<span class="help-block">Activate first checkbox if day is a work day, deactivate days for sprint planning, recap meeting and holidays; Deactivate second checkbox if day should be excluded for statistics (e.g. saturday, sunday).</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputFinishedList">Name of "Finished list"</label>
+					<div class="controls">
+						<input class="input-xxlarge" id="inputFinishedList" type="text" placeholder="Finished list" required data-bind="value: sprint.finishedList">
+						<span class="help-block">Enter the name of the Trello list that contains all finished tasks/cards.</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="standupTime">Standup meeting</label>
+					<div class="controls">
+						<div class="input-prepend" id="standupTimeDiv">
+							<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span><input data-format="hh:mm" id="standupTime" type="text" data-bind="value: sprint.standupMeeting">
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<button type="submit" class="btn">Save</button>
+					</div>
+				</div>
+			</form>
+
+			<script type="text/javascript">
+				function updateSprintRange() {
+					var value = $('#dateRange').attr('value');
+					sprintViewModel.dateRange(value);
+				}
+
+				$(document).ready(function() {
+					$('#dateRange').daterangepicker();
+					
+					$('#dateRange').blur(function() {
+						updateSprintRange();	
+					});
+
+					$('#standupTimeDiv').datetimepicker({
+						pickDate: false
+					});
+				});
+			</script>
+
+	      	<hr>
+
+	      	{{>footer.template}}
+		</div>
+	</body>
+</html>
