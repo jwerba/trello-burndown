@@ -65,18 +65,18 @@ Here are some examples that are parsed exactly the same way and generating the s
 
 # Setup the app
 
-## Install dependencies
+## 1) Install the required dependencies
 
 - [install node.js](http://nodejs.org/)
 - install npm (if you're running node.js [v0.6.3](https://github.com/joyent/node/commit/b159c6) or newer it's already installed!)
 - go to the sources directory
 - run `npm install` (in package directory, no arguments): Install the dependencies in the local node_modules folder. By default, npm install will install all modules listed as dependencies in package.json.
 
-## Configure settings.json
+## 2) Configure the required values in settings.json
 
-This file contains all the settings you need to setup for the app to access your trello boards 
+This file contains all the settings you need to setup for the app to access your trello boards
 
-The structure of the file is: 
+The structure of the file is as follows: 
 
 ```JSON
 {
@@ -100,11 +100,11 @@ The structure of the file is:
 
 For a basic setup the only thing you have to do is to obtain from Trello your
 
--applicationKey
--userToken
--and boardId
+- applicationKey
+- userToken
+- and boardId
 
-the other settings are optionals (you can leave the defaults): 
+the other settings are optional (you can leave the defaults): 
 
 - "port": is the default port in which node.js will host the app
 - "template": is the name of the template file for viewing the burndown graphs (will be searched in `templates` subfolder)
@@ -114,18 +114,18 @@ the other settings are optionals (you can leave the defaults):
 - "enableWorkers": [true/false] whether or not to start the web-worker that connects to Trello to get the sprints information and create the statistics. If you do not start this you will not see any info.  You can disable it if you have another instance running only the worker separately from the web app.
 - "storage": the storage provider implementation to use and the required settings for the provider. Right now you have 2 flavors available: local/fsProvider.js (persists everything locally in the filesystem) and azure/documentDBProvider.js (persists everything in Azure documentDB non-SQL storage). For more details on creating new providers or configuration of the existing ones, please take a look at the wiki documentation.
 
-## Obtain a Trello info (applicationKey, userToken and boardId)
+## 3) Obtain your Trello token and key (applicationKey, userToken and boardId)
 
-- First, log in to Trello and open [Generate API Keys](https://trello.com/app-key "Generate API Keys"). You will receive an key (the applicationKey) to use in the next step.
-- Second, click the "Connect" button and follow the instructions OR make a call to 
+- 3.1) First, log in to Trello and open [Generate API Keys](https://trello.com/app-key "Generate API Keys"). You will receive an key (the applicationKey) to use in the next step.
+- 3.2) Second, click the "Connect" button and follow the instructions OR make a call to 
 https://trello.com/1/authorize?key=[YOUR_APP_KEY]&name=trello-burndown&expiration=never&response_type=token to grant access for this application. Be sure to replace `[YOUR_APP_KEY]` with the key received in the first step.
-- Third, get the board ID of the board you want to use (this is the default board, you can then specify a different board ID when you create a new sprint if you want to use another one). If youd dont know your board ID you can get it from executing info.js or from the [Trello API Sandbox](https://developers.trello.com/sandbox) pressing the "Get Boards" button of the examples
+- 3.3) Third, get the board ID of the board you want to use (this is the default board, you can then specify a different board ID when you create a new sprint if you want to use another one). If youd dont know your board ID you can get it from executing info.js or from the [Trello API Sandbox](https://developers.trello.com/sandbox) pressing the "Get Boards" button of the examples
 
 > For further information visit: [Getting a Token from a User](https://trello.com/docs/gettingstarted/index.html#getting-a-token-from-a-user "Getting a Token from a User")
 
 Store the key from the first action in the `applicationKey` setting of `settings.json`, token received from the second step in `userToken` and the board ID of the default board in `boardId`.
 
-## Start the application !!
+## 4) Start the application !!
 
 - start the web server use the command `node run.js`
 - open a browser to `http://<server>:<port>` where `<server>` is your server's url or IP address, and `<port>` is the port you have configured in settings.json
