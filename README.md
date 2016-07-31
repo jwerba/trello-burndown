@@ -64,6 +64,7 @@ Here are some examples that are parsed exactly the same way and generating the s
 * **e**: the real effort (to reflect this against the estimate)
 
 # Setup the app
+
 ## Install dependencies
 
 - [install node.js](http://nodejs.org/)
@@ -77,6 +78,7 @@ This file contains all the settings you need to setup for the app to access your
 
 The structure of the file is: 
 
+```JSON
 {
     "trelloInfo": {
         "applicationKey": "[YOUR_APP_KEY]",
@@ -94,6 +96,7 @@ The structure of the file is:
         "settings": { }
     }
 }
+```
 
 For a basic setup the only thing you have to do is to obtain from Trello your
 
