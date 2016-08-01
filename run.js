@@ -1,8 +1,3 @@
-/*
- * Trello burndown chart generator
- *
- * Author: Norbert Eder <wpfnerd+nodejs@gmail.com>
- */
 
 var Storage = require('./lib/storage.js');
 var path = require('path');
@@ -22,14 +17,15 @@ var instance = Storage.getInstance();
 instance.configure(configuration);
 var provider = instance.getProvider();
 
-if (settings.enableWorkers && settings.enableWorkers == true) {
+if (!settings.enableWorkers || (settings.enableWorkers && settings.enableWorkers == true)) {
     var Worker = require('./worker.js');
     worker = new Worker();
     worker.start();
 }
-
-if (process.env.PORT)
-    settings.port = process.env.PORT;
-
-var server = require('./lib/server');
-require('http').createServer(server).listen(settings.port);
+if (!settings.hostWebsite || (settings.hostWebsite && settings.hostWebsite == true)) {   
+    if (process.env.PORT)
+        settings.port = process.env.PORT;
+    
+    var server = require('./lib/server');
+    require('http').createServer(server).listen(settings.port);
+}

@@ -29,13 +29,13 @@
 		<div class="container">
 			<div class="hero-unit">
 		        <h1>Welcome!</h1>
-		        <p><strong>trello-burndown</strong> helps you to get the perfect overview of your sprints. Manage your tasks via <a href="http://trello.com" target="_blank">Trello</a>, view the results here.</p>
-		        <p><strong>Need help?</strong> You will find a complete help <a href="http://devtyr.github.com/trello-burndown/" target="_blank">here</a>. 
+		        <p><strong>trello-burndown</strong> helps you to get the perfect overview of your sprints. Manage your tasks via <a href="http://trello.com" target="_blank">Trello</a>, view the results here instantly.</p>
+		        <p><strong>Need help?</strong> You will find a complete help <a href="http://github.com/jwerba/trello-burndown" target="_blank">here</a>. 
 	      	</div>
 
 	      	<div class="alert alert-block">
 			  <h4>Wanted!</h4>
-			  This project is hosted @ <a href="http://github.com/devtyr/trello-burndown">github</a>. It is up to you to help improve this tool.
+			  This project is hosted @ <a href="http://github.com/jwerba/trello-burndown">github</a>. It is up to you to help improve this tool.
 			</div>
 
 	      	<hr>

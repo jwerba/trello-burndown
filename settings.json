@@ -10,6 +10,7 @@
     "html_title": "Burndown chart generator",
     "html_header": "Burndown for sprint ",
     "enableWorkers": true,
+    "hostWebsite": true,
     "storage": {
         "provider": "local/fsProvider.js",
         "settings": { }
