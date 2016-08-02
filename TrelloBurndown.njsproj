@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
+    <None Include="attoburndown.pubxml" />
     <Content Include="package.json">
       <Publish>True</Publish>
     </Content>

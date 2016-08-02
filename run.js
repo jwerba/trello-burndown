@@ -8,10 +8,15 @@ settings.templatePath = path.join(settings.root, 'templates');
 settings.sprintTemplatePath = path.join(settings.root, 'templates' + path.sep + settings.template);
 settings.homeTemplatePath = path.join(settings.root, 'templates' + path.sep + settings.home_template);
 
+/*
+ for example:
 var configuration = {
     provider: 'local/fsProvider.js', //'azure/documentDBProvider.js', 
     settings : {}
 };
+ */
+var configuration = settings.storage;
+
 
 var instance = Storage.getInstance();
 instance.configure(configuration);
