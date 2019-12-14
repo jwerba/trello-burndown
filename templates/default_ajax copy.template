@@ -33,72 +33,80 @@
              var dataSource = '/api/stats?sprint={{sprint}}';
 			 var chart = null;
 			 function createChart(){
-			 	var data = {
-		  				"xScale": "ordinal",
-		  				"yScale": "linear",
-		  				"type": "line-dotted",
-		  				"main": [
-									{
-									"className": ".main.l1",
-									"data": [] // stats.burndown.data1
-									},
-									{
-										"className": ".main.l2",
-										"data": [] //stats.burndown.data2
-									}
-								],
-						"comp": []
-						};
-	  				var tt = document.createElement('div'),
-	  				leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
-	  				topOffset = -32;
-	  				tt.className = 'ex-tooltip';
-	  				document.body.appendChild(tt);
-	  				var opts = {
-		  							"dataFormatX": function (x) { return x; },
-		  							"tickFormatX": function (x) { return x; },
-		  							"xMin": 0,
-		  							"yMin": 0,
-		  							"mouseover": function (d, i) {
-		    										var pos = $(this).offset();
-		    										$(tt).text(d.x + ': ' + d.y)
-		      										.css({top: topOffset + pos.top, left: pos.left + leftOffset, position: 'absolute'})
-		      										.show();
-		  										},
-		  							"mouseout": function (x) {
-		    										$(tt).hide();
-		  										}
-									};
-      				var myChart = new xChart("bar", data, "#burndownChart", opts);
-	  				chart = myChart;
+			 
+			 var data = {
+		  "xScale": "ordinal",
+		  "yScale": "linear",
+		  "type": "line-dotted",
+		  "main": [
+		    {
+		      "className": ".main.l1",
+		      "data": [] // stats.burndown.data1
+		    },
+		    {
+	            "className": ".main.l2",
+	            "data": [] //stats.burndown.data2
+		      }
+          ],
+		  "comp": []
+	      };
+
+	  var tt = document.createElement('div'),
+	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+	  topOffset = -32;
+	  tt.className = 'ex-tooltip';
+	  document.body.appendChild(tt);
+
+	  var opts = {
+		  "dataFormatX": function (x) { return x; },
+		  "tickFormatX": function (x) { return x; },
+		  "xMin": 0,
+		  "yMin": 0,
+		  "mouseover": function (d, i) {
+		    var pos = $(this).offset();
+		    $(tt).text(d.x + ': ' + d.y)
+		      .css({top: topOffset + pos.top, left: pos.left + leftOffset, position: 'absolute'})
+		      .show();
+		  },
+		  "mouseout": function (x) {
+		    $(tt).hide();
+		  }
+		};
+
+      var myChart = new xChart("bar", data, "#burndownChart", opts);
+	  chart = myChart;
+			 
 			 }
 
             function requestData(){
                 $.ajax({
                    url: dataSource,
                    success: function (stats) {
-												var data = {
-																"xScale": "ordinal",
-																"yScale": "linear",
-																"type": "line-dotted",
-																"main": [
-																			{
-																				"className": ".main.l1",
-																				"data": stats.burndown.data1
-																			},
-																			{
-																				"className": ".main.l2",
-																				"data": stats.burndown.data2
-																			}
-																		],
-																"comp": []
-																};
-												chart.setData(data);
-												setTimeout(requestData, 5000);
-                   							},
+					   //createChart(stats);
+
+					   var data = {
+					   "xScale": "ordinal",
+					   "yScale": "linear",
+					   "type": "line-dotted",
+					   "main": [
+					   {
+					   "className": ".main.l1",
+					   "data": stats.burndown.data1
+					   },
+					   {
+					   "className": ".main.l2",
+					   "data": stats.burndown.data2
+					   }
+					   ],
+					   "comp": []
+					   };
+					   chart.setData(data);
+                       setTimeout(requestData, 5000);
+                   },
                    cache: false
                 });
             }
+
 
             //build chart using options above
             $(document).ready(function(){

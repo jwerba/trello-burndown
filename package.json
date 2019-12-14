@@ -8,7 +8,7 @@
         "email": "julian.werba@gmail.com"
     },
     "scripts": {
-        "start": "node run.js" 
+        "start": "node run.js"
     },
     "dependencies": {
         "connect": "^3.4.1",

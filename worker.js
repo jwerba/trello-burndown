@@ -2,9 +2,10 @@
 var Promise = require('promise');
 var CardReceiver = require('./lib/cardreceiver');
 var CardStatistics = require('./lib/cardstatistics.js')
-
 var Storage = require('./lib/storage.js');
-
+var SprintBuilder = require('./lib/sprintBuilder');
+var Sprint = require('./lib/sprint');
+var SprintTask = require('./lib/sprintTask');
 
 
 var Worker = function Worker() {
@@ -55,7 +56,7 @@ Worker.prototype = (function () {
                     var boardId = (config.boardId && config.boardId !== "")? config.boardId: self.trelloInfo.boardId;
                     var cardReceiver = new CardReceiver(self.trelloInfo.applicationKey, self.trelloInfo.userToken, boardId);
                     var splittedLists = config.lists.split(',');
-                    splittedLists.concat(config.finishedLists);
+                    //splittedLists.concat(config.finishedList);
                     cardReceiver.receive(splittedLists, function (err, cards) {
                         if (err) {
                             var message = '[sprint: ' + config.name + ' boardId: ' + config.boardId + '] CardReceiver.receive(...) raised error: ' + err;
@@ -77,8 +78,13 @@ Worker.prototype = (function () {
         console.log('processing cards for ' + config.name + '...');
         var cardStatistics = new CardStatistics();
         var data = cardStatistics.generate(cards, config.finishedList, config.standupTime);
+        var builder = new SprintBuilder();
+        var sprint = builder.buildFrom(config);
+        var tasks = cardStatistics.buildTasksFromCards(cards, config.finishedList);
+        sprint.add(tasks);
         printStatistics(config.name, data);
         var stats = cardStatistics.export(data, config.resources, config.days, config.name);
+        stats.sprintModel = sprint;
         Storage.getInstance().ensureID(stats);
         this.worker.repository.saveStatistics(stats);
     };
