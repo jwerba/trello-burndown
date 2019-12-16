@@ -30,7 +30,7 @@
 	<body>
 
 	<script>
-             var dataSource = '/api/stats?sprint={{sprint}}';
+             var dataSource = '/api/stats2?sprint={{sprint}}';
 			 var chart = null;
 			 function createChart(){
 			 	var data = {

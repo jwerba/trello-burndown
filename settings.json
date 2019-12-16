@@ -1,8 +1,8 @@
 {
     "trelloInfo": {
-        "applicationKey": "7572f9af23ea3258ce90e2769f7c06fb",
-        "userToken": "8a80fa7d9094fabbd54d91520d0ce2d50dac0253a65fac67b8e46edba77f2a1f",
-        "boardId": "5df1349cb7bcbf072c343922"
+        "applicationKey": "[YOUR_APP_KEY]",
+        "userToken": "[YOUR_USER_TOKEN]",
+        "boardId": "[YOUR_BOARD_ID]"
     },
     "port": 80,
     "template": "default_ajax.template",
