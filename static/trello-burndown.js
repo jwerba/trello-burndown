@@ -1,23 +1,24 @@
 function Sprint() {
+	this.id = '';
 	this.name = ko.observable('');
 	this.boardId = ko.observable('');
-	this.dates = ko.observableArray([]);
+	this.days = ko.observableArray([]);
 	this.finishedList = ko.observable('');
 	this.lists = ko.observableArray([]);
-	this.standupMeeting = ko.observable();
+	this.dailyMeeting = ko.observable();
 
 	this.clear = function() {
 		this.name('');
 		this.boardId('');
-		this.dates([]);
+		this.days([]);
 		this.finishedList('');
 		this.lists([]);
-		this.standupMeeting();		
+		this.dailyMeeting();		
 	}
 
 	this.resetIncludes = function() {
-		for (var i = 0; i < this.dates().length; i++) {
-			this.dates()[i].include(false);
+		for (var i = 0; i < this.days().length; i++) {
+			this.days()[i].include(false);
 		}
 	}
 };
@@ -97,10 +98,10 @@ function SprintViewModel() {
 	// Operations
 	self.addSprint = function() {
 		var dataToSend = ko.toJSON(self.sprint);
-		dataToSend.standupMeeting += ":00Z";
+		dataToSend.dailyMeeting += ":00Z";
 		$.ajax({
 		  type: "POST",
-		  url: "/manage/add",
+		  url: "/api/sprints/configurations",
 		  data: dataToSend,
 		}).done(function( msg ) {
 		  self.sprint.clear();
@@ -114,10 +115,11 @@ function SprintViewModel() {
 
 	self.updateSprint = function() {		
 		var dataToSend = ko.toJSON(self.sprint);
-		dataToSend.standupMeeting += ":00Z";
+		console.log(self.sprint);
+		dataToSend.dailyMeeting += ":00Z";
 		$.ajax({
 			type: "PUT",
-			url: "/manage/edit",
+			url: "/api/sprints/" + self.sprint.id + "/configuration",
 			data: dataToSend,
 		}).done(function(msg) {
 			self.message("Updated successfully");
@@ -132,40 +134,35 @@ function SprintViewModel() {
 		var retVal = '';
 		if (data) {
 			retVal = {
-				startDate: new Date(Date.parse(data.dates[0].day)),
-				endDate: new Date(Date.parse(data.dates[data.dates.length - 1].day))
+				startDate: new Date(Date.parse(data.days[0].day)),
+				endDate: new Date(Date.parse(data.days[data.days.length - 1].day))
 			};
-		} else if (self.sprint && self.sprint.dates().length) {
+		} else if (self.sprint && self.sprint.days().length) {
 			retVal = {
-				startDate: new Date(Date.parse(self.sprint.dates()[0].day())),
-				endDate: new Date(Date.parse(self.sprint.dates()[self.sprint.dates().length - 1].day()))
+				startDate: new Date(Date.parse(self.sprint.days()[0].day())),
+				endDate: new Date(Date.parse(self.sprint.days()[self.sprint.days().length - 1].day()))
 			};
 		}
 		return retVal;
 	}
 
-	self.loadSprint = function(name, callback) {
+	self.loadSprint = function(id, callback) {
 		$.ajax({
 			type: "GET",
-			url: "/api/sprint?sprint=" + name
+			url: "/api/sprints/" + id + "/configuration"
 		}).done(function(msg) {
-			var data = JSON.parse(msg);
-
+			var data = msg;
 			callback(self.getDateRange(data));
-
 			self.sprint.resetIncludes();
-
 			self.sprint.name(data.name);
 			self.sprint.boardId(data.boardId);
 			self.sprint.finishedList(data.finishedList);
-
-			if (data.standupMeeting)
-				self.sprint.standupMeeting(data.standupMeeting.substring(0,5));
-
-			for (var i = 0; i < data.dates.length; i++) {
-				self.updateSprintDay(data.dates[i].day, data.dates[i].isWorkDay, data.dates[i].include);
+			self.sprint.id = data.id;
+			if (data.dailyMeeting)
+				self.sprint.dailyMeeting(data.dailyMeeting.substring(0,5));
+			for (var i = 0; i < data.days.length; i++) {
+				self.updateSprintDay(data.days[i].day, data.days[i].isWorkDay, data.days[i].include);
 			}
-
 			//call addSpringList during load only if there are lists to show
 			if (data.lists.length>0 && data.lists[0].name != "") {
 				for (var i = 0; i < data.lists.length; i++) {
@@ -184,23 +181,23 @@ function SprintViewModel() {
 		if (!include) {
 			isWorkDay = false;
 		}
-		self.sprint.dates.push(new SprintDayDefinition({ day: date, isWorkDay: isWorkDay, include: include }));
+		self.sprint.days.push(new SprintDayDefinition({ day: date, isWorkDay: isWorkDay, include: include }));
 	};
 
 	self.updateSprintDay = function(date, isWorkDay, include) {
 		if (!include) {
 			isWorkDay = false;
 		}
-		for (var i = 0; i < self.sprint.dates().length; i++) {
-			if (self.sprint.dates()[i].day() == date) {
-				self.sprint.dates()[i].isWorkDay(isWorkDay);
-				self.sprint.dates()[i].include(include);
+		for (var i = 0; i < self.sprint.days().length; i++) {
+			if (self.sprint.days()[i].day() == date) {
+				self.sprint.days()[i].isWorkDay(isWorkDay);
+				self.sprint.days()[i].include(include);
 			}
 		}
 	}
 
 	self.clearDays = function() {
-		self.sprint.dates.removeAll();
+		self.sprint.days.removeAll();
 	};
 
 	self.addSprintList = function() {

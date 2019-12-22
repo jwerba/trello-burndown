@@ -30,7 +30,8 @@
 	<body>
 
 	<script>
-             var dataSource = '/api/stats2?sprint={{sprint}}';
+			 var sprintID = '{{config.id}}';
+             var dataSource = '/api/sprints/' + sprintID + '/burndown';
 			 var chart = null;
 			 function createChart(){
 			 	var data = {
@@ -76,7 +77,7 @@
             function requestData(){
                 $.ajax({
                    url: dataSource,
-                   success: function (stats) {
+                   success: function (resp) {
 												var data = {
 																"xScale": "ordinal",
 																"yScale": "linear",
@@ -84,18 +85,22 @@
 																"main": [
 																			{
 																				"className": ".main.l1",
-																				"data": stats.burndown.data1
+																				"data": resp.burndown.data1
 																			},
 																			{
 																				"className": ".main.l2",
-																				"data": stats.burndown.data2
+																				"data": resp.burndown.data2
 																			}
 																		],
 																"comp": []
 																};
 												chart.setData(data);
+												updateSprintInfo(resp.sprint);
 												setTimeout(requestData, 5000);
                    							},
+					error: function(){
+						setTimeout(requestData, 10000);
+					},
                    cache: false
                 });
             }
@@ -106,7 +111,9 @@
                 requestData();
             });
 
-
+			function updateSprintInfo(sprint){
+				$("#lastUpdated").text(sprint.lastUpdated);	
+			}
     </script>
 
 	<!--[if lt IE 7]>
@@ -123,8 +130,8 @@
 		<h4>Burndown chart</h4>
 		<figure style="width: 1100px; height: 500px;" id="burndownChart"></figure>
 		<ul>
-			<li>green: done estimate</li>
-			<li>blue: ideal estimate</li>
+			<li>green: done</li>
+			<li>blue: ideal</li>
 		</ul>
 	</div>
 	<div style="height:10%; font-size: 11px;" >
@@ -155,7 +162,7 @@
      
 
       <div class="alert alert-success">
-	  	<strong>Last generation</strong>: {{generationTime}}
+	  	<strong>Last generation</strong>: <div id='lastUpdated'></div>
 	  </div>
 
       <hr>

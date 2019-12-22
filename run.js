@@ -1,12 +1,12 @@
 
-var Storage = require('./lib/storage.js');
+var Storage = require('./lib/services/storage.js');
 var path = require('path');
-
 global.settings = require('./settings');
 settings.root = __dirname.replace(/\/+$/, "");
 settings.templatePath = path.join(settings.root, 'templates');
 settings.sprintTemplatePath = path.join(settings.root, 'templates' + path.sep + settings.template);
 settings.homeTemplatePath = path.join(settings.root, 'templates' + path.sep + settings.home_template);
+
 
 /*
  for example:
@@ -30,7 +30,8 @@ if (!settings.enableWorkers || (settings.enableWorkers && settings.enableWorkers
 if (!settings.hostWebsite || (settings.hostWebsite && settings.hostWebsite == true)) {   
     if (process.env.PORT)
         settings.port = process.env.PORT;
-    
-    var server = require('./lib/server');
-    require('http').createServer(server).listen(settings.port);
+        var Server = require('./lib/server.js');
+
+        var server = new Server();
+        server.listen(settings.port);
 }

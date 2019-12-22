@@ -35,14 +35,14 @@
 			</div>
 
 			<ul>
-				{{#sprintConfigs}}
+				{{#sprints}}
 					<li>
-						<a href="/manage/edit?sprint={{name}}">{{name}}</a>
+						<a href="/sprints/{{id}}/edit">{{name}}</a>
 					</li>
-				{{/sprintConfigs}}
-				{{^sprintConfigs}}
+				{{/sprints}}
+				{{^sprints}}
 					No sprints available
-				{{/sprintConfigs}}
+				{{/sprints}}
 			</ul>
 
 	      	<hr>
