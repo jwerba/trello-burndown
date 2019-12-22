@@ -252,3 +252,4 @@ paket-files/
 *.sln.iml
 /settings.json.ignore
 settings.json
+export/config export/stats
