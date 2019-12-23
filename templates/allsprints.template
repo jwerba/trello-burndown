@@ -37,14 +37,14 @@
 			<p>Below you find a complete list of all your sprints. Choose one to view the results.</p>
 
 			<ul>
-				{{#all_sprints}}
+				{{#sprints}}
 					<li>
-						<a href="/?sprint={{name}}">{{name}}</a>
+						<a href="/sprints/{{id}}">{{name}}</a>
 					</li>
-				{{/all_sprints}}
-				{{^all_sprints}}
+				{{/sprints}}
+				{{^sprints}}
 					No sprints available
-				{{/all_sprints}}
+				{{/sprints}}
 			</ul>
 
 	      	<hr>
