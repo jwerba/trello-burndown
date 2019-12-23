@@ -17,13 +17,13 @@
             </a>
             <ul class="dropdown-menu">
               {{#sprints}}
-				<li>
-                    <a href="/?sprint={{name}}">
+				          <li>
+                    <a href="/sprints/{{id}}">
                        <i class="icon-signal"></i>
                        {{name}}
                      </a>
                   </li>
-			  {{/sprints}}
+			        {{/sprints}}
 			  {{^sprints}}
 			  	<li>
 			  		<i class="icon-info"></i>
@@ -33,7 +33,7 @@
 			  {{#has_sprints}}
 			    <li class="divider"></li>
 			  	<li>
-			  		<a href="/all">
+			  		<a href="/sprints"> <!-- <a href="/all"> -->
 			  			<i class="icon-list"></i>
 			  			All sprints
 			  		</a>
@@ -41,42 +41,20 @@
 			  {{/has_sprints}}
             </ul>
           </li>
-          <!--li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-              Update active sprints
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-              {{#sprintConfigs}}
-				<li>
-                    <a href="/refresh?sprint={{name}}">
-                       <i class="icon-refresh"></i>
-                       {{name}}
-                     </a>
-                  </li>
-			  {{/sprintConfigs}}
-			  {{^sprintConfigs}}
-			  	<li>
-			  		<i class="icon-info"></i>
-			  		No active sprints
-			  	</li>
-			  {{/sprintConfigs}}
-            </ul>
-          </li-->
           <li class="dropdown">
           	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
               Manage sprints
               <b class="caret"></b>
             </a>
           	<ul class="dropdown-menu">
-				<li>
-                    <a href="/manage/edit">
+				  <li>
+                    <a href="/sprints/edit">
                        <i class="icon-pencil"></i>
                        Edit existing sprints
                     </a>
                 </li>
                 <li>
-                    <a href="/manage/add">
+                    <a href="/sprints/add">
                        <i class="icon-plus"></i>
                        Add sprint
                     </a>

@@ -20,6 +20,21 @@
 	      }
 		  
 		  
+			 .multi-column ul{
+					width:760px;
+					margin-bottom:20px;
+					overflow:hidden;
+					
+				}
+			.multi-column li{
+					line-height:1.5em;
+					
+					float:left;
+					display:inline;
+					width:16.666%;
+				}
+		  
+		  
 	    </style>
 
 		<script src="/static/d3.v3.min.js"></script>
@@ -30,83 +45,80 @@
 	<body>
 
 	<script>
-             var dataSource = '/api/stats?sprint={{sprint}}';
+			 var sprintID = '{{config.id}}';
+             var dataSource = '/api/sprints/' + sprintID + '/burndown';
 			 var chart = null;
 			 function createChart(){
-			 
-			 var data = {
-		  "xScale": "ordinal",
-		  "yScale": "linear",
-		  "type": "line-dotted",
-		  "main": [
-		    {
-		      "className": ".main.l1",
-		      "data": [] // stats.burndown.data1
-		    },
-		    {
-	            "className": ".main.l2",
-	            "data": [] //stats.burndown.data2
-		      }
-          ],
-		  "comp": []
-	      };
-
-	  var tt = document.createElement('div'),
-	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
-	  topOffset = -32;
-	  tt.className = 'ex-tooltip';
-	  document.body.appendChild(tt);
-
-	  var opts = {
-		  "dataFormatX": function (x) { return x; },
-		  "tickFormatX": function (x) { return x; },
-		  "xMin": 0,
-		  "yMin": 0,
-		  "mouseover": function (d, i) {
-		    var pos = $(this).offset();
-		    $(tt).text(d.x + ': ' + d.y)
-		      .css({top: topOffset + pos.top, left: pos.left + leftOffset, position: 'absolute'})
-		      .show();
-		  },
-		  "mouseout": function (x) {
-		    $(tt).hide();
-		  }
-		};
-
-      var myChart = new xChart("bar", data, "#burndownChart", opts);
-	  chart = myChart;
-			 
+			 	var data = {
+		  				"xScale": "ordinal",
+		  				"yScale": "linear",
+		  				"type": "line-dotted",
+		  				"main": [
+									{
+									"className": ".main.l1",
+									"data": [] // stats.burndown.data1
+									},
+									{
+										"className": ".main.l2",
+										"data": [] //stats.burndown.data2
+									}
+								],
+						"comp": []
+						};
+	  				var tt = document.createElement('div'),
+	  				leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+	  				topOffset = -32;
+	  				tt.className = 'ex-tooltip';
+	  				document.body.appendChild(tt);
+	  				var opts = {
+		  							"dataFormatX": function (x) { return x; },
+		  							"tickFormatX": function (x) { return x; },
+		  							"xMin": 0,
+		  							"yMin": 0,
+		  							"mouseover": function (d, i) {
+		    										var pos = $(this).offset();
+		    										$(tt).text(d.x + ': ' + d.y)
+		      										.css({top: topOffset + pos.top, left: pos.left + leftOffset, position: 'absolute'})
+		      										.show();
+		  										},
+		  							"mouseout": function (x) {
+		    										$(tt).hide();
+		  										}
+									};
+      				var myChart = new xChart("bar", data, "#burndownChart", opts);
+	  				chart = myChart;
 			 }
 
             function requestData(){
                 $.ajax({
                    url: dataSource,
-                   success: function (stats) {
-					   //createChart(stats);
-
-					   var data = {
-					   "xScale": "ordinal",
-					   "yScale": "linear",
-					   "type": "line-dotted",
-					   "main": [
-					   {
-					   "className": ".main.l1",
-					   "data": stats.burndown.data1
-					   },
-					   {
-					   "className": ".main.l2",
-					   "data": stats.burndown.data2
-					   }
-					   ],
-					   "comp": []
-					   };
-					   chart.setData(data);
-                       setTimeout(requestData, 5000);
-                   },
+                   success: function (resp) {
+												var data = {
+																"xScale": "ordinal",
+																"yScale": "linear",
+																"type": "line-dotted",
+																"main": [
+																			{
+																				"className": ".main.l1",
+																				"data": resp.burndown.data1
+																			},
+																			{
+																				"className": ".main.l2",
+																				"data": resp.burndown.data2
+																			}
+																		],
+																"comp": []
+																};
+												chart.setData(data);
+												updateSprintInfo(resp.sprint);
+												setTimeout(requestData, 5000);
+                   							},
+					error: function(){
+						setTimeout(requestData, 10000);
+					},
                    cache: false
                 });
             }
-
 
             //build chart using options above
             $(document).ready(function(){
@@ -114,7 +126,31 @@
                 requestData();
             });
 
+			function updateSprintInfo(sprint){
+				$("#lastUpdated").text(sprint.lastUpdated);	
+				$("#statisticsTotalEffort").text(sprint.totalEffort);	
+				$("#unfinishedItems").empty();
+				var list = $("#unfinishedItems");
+				var remainingEffort = 0;
+				var done = 0;
+				sprint.tasksRemaining.sort(function (a, b) {
+					if (a.name > b.name) return 1;
+					if (a.name < b.name) return -1;
+					return 0;
+				});
+				sprint.tasksRemaining.forEach(t=>{
+					remainingEffort+= t.effort;
+					var text = "<li><a href=\"" + t.shortUrl + "\" title=\"" + t.name + "\">" + t.name + "</a></li>"
+					list.append(text);
+				});
+				sprint.tasksDone.forEach(t=>{
+					done+= t.effort;
+				});
+				$("#statisticsRemainingEffort").text(remainingEffort);	
+				$("#statisticsDone").text(done);
 
+
+			}
     </script>
 
 	<!--[if lt IE 7]>
@@ -129,26 +165,23 @@
 		</div>
 	<div style="height:90%;">
 		<h4>Burndown chart</h4>
-		<figure style="width: 1100px; height: 500px;" id="burndownChart"></figure>
-		<ul>
-			<li>green: done estimate</li>
-			<li>blue: ideal estimate</li>
-		</ul>
+		<figure style="width: 1100px; height: 400px;" id="burndownChart"></figure>
 	</div>
+	<span style="font-size: 9px;">blue=ideal / green=done</span>
 	<div style="height:10%; font-size: 11px;" >
 		<table>
 		<tr style="height:100px;">
 			<td style="width:250px;">
 				<h6>Statistics</h6>
 					<p>
-						Total estimate: {{statisticsSummary.totalEstimate}}<br/>
-						Open estimate: {{statisticsSummary.openEstimate}}<br/>
-						Total effort: {{statisticsSummary.effort}}
-					</p>	
+						Total effort: <span id="statisticsTotalEffort">{{statisticsSummary.totalEstimate}}</span><br/>
+						Remaining effort: <span id="statisticsRemainingEffort">{{statisticsSummary.openEstimate}}</span><br/>
+						Done: <span id="statisticsDone">{{statisticsSummary.effort}}</span>
+					</p>
 			</td>
 			<td>
 				<h6>Unfinished items</h6>
-				<ul>
+				<ul id="unfinishedItems" class="multi-column">
 					{{#unfinishedItems}}
 					<li><a href="{{url}}" title="{{name}}">{{name}}</a></li>
 					{{/unfinishedItems}}
@@ -163,7 +196,7 @@
      
 
       <div class="alert alert-success">
-	  	<strong>Last generation</strong>: {{generationTime}}
+	  	<strong>Last generation</strong>: <div id='lastUpdated'></div>
 	  </div>
 
       <hr>
