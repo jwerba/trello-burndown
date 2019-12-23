@@ -20,6 +20,21 @@
 	      }
 		  
 		  
+			 .multi-column ul{
+					width:760px;
+					margin-bottom:20px;
+					overflow:hidden;
+					
+				}
+			.multi-column li{
+					line-height:1.5em;
+					
+					float:left;
+					display:inline;
+					width:16.666%;
+				}
+		  
+		  
 	    </style>
 
 		<script src="/static/d3.v3.min.js"></script>
@@ -113,6 +128,28 @@
 
 			function updateSprintInfo(sprint){
 				$("#lastUpdated").text(sprint.lastUpdated);	
+				$("#statisticsTotalEffort").text(sprint.totalEffort);	
+				$("#unfinishedItems").empty();
+				var list = $("#unfinishedItems");
+				var remainingEffort = 0;
+				var done = 0;
+				sprint.tasksRemaining.sort(function (a, b) {
+					if (a.name > b.name) return 1;
+					if (a.name < b.name) return -1;
+					return 0;
+				});
+				sprint.tasksRemaining.forEach(t=>{
+					remainingEffort+= t.effort;
+					var text = "<li><a href=\"" + t.shortUrl + "\" title=\"" + t.name + "\">" + t.name + "</a></li>"
+					list.append(text);
+				});
+				sprint.tasksDone.forEach(t=>{
+					done+= t.effort;
+				});
+				$("#statisticsRemainingEffort").text(remainingEffort);	
+				$("#statisticsDone").text(done);
+
+
 			}
     </script>
 
@@ -128,26 +165,23 @@
 		</div>
 	<div style="height:90%;">
 		<h4>Burndown chart</h4>
-		<figure style="width: 1100px; height: 500px;" id="burndownChart"></figure>
-		<ul>
-			<li>green: done</li>
-			<li>blue: ideal</li>
-		</ul>
+		<figure style="width: 1100px; height: 400px;" id="burndownChart"></figure>
 	</div>
+	<span style="font-size: 9px;">blue=ideal / green=done</span>
 	<div style="height:10%; font-size: 11px;" >
 		<table>
 		<tr style="height:100px;">
 			<td style="width:250px;">
 				<h6>Statistics</h6>
 					<p>
-						Total estimate: {{statisticsSummary.totalEstimate}}<br/>
-						Open estimate: {{statisticsSummary.openEstimate}}<br/>
-						Total effort: {{statisticsSummary.effort}}
-					</p>	
+						Total effort: <span id="statisticsTotalEffort">{{statisticsSummary.totalEstimate}}</span><br/>
+						Remaining effort: <span id="statisticsRemainingEffort">{{statisticsSummary.openEstimate}}</span><br/>
+						Done: <span id="statisticsDone">{{statisticsSummary.effort}}</span>
+					</p>
 			</td>
 			<td>
 				<h6>Unfinished items</h6>
-				<ul>
+				<ul id="unfinishedItems" class="multi-column">
 					{{#unfinishedItems}}
 					<li><a href="{{url}}" title="{{name}}">{{name}}</a></li>
 					{{/unfinishedItems}}
