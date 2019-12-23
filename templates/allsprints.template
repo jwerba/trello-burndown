@@ -39,7 +39,7 @@
 			<ul>
 				{{#sprints}}
 					<li>
-						<a href="/sprints/{{id}}/burndown">{{name}}</a>
+						<a href="/sprints/{{id}}">{{name}}</a>
 					</li>
 				{{/sprints}}
 				{{^sprints}}

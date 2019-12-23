@@ -74,37 +74,15 @@ Worker.prototype = (function () {
     
      function processCards(config, cards) {
         console.log('processing cards for ' + config.name + '...');
-        var cardStatistics = new CardStatistics();
-        var data = cardStatistics.generate(cards, config.finishedList, config.dailyMeeting);
         var builder = new SprintBuilder();
         var sprint = builder.buildFrom(config);
+        var cardStatistics = new CardStatistics();
         var tasks = cardStatistics.buildTasksFromCards(cards, config.finishedList);
         sprint.add(tasks);
         console.log(sprint);
-        //printStatistics(config.name, data);
-        //var stats = {}; // cardStatistics.export(data, config.resources, config.days, config.name);
-        //stats.sprintModel = sprint;
         Storage.getInstance().ensureID(sprint);
         this.worker.repository.saveStatistics(sprint);
     };
-    
-    function printStatistics (sprintName, data) {
-        console.log("");
-        console.log("Statistics for " + sprintName);
-        console.log("----------");
-        console.log("Cards (total):    " + (data.cardsopen + data.cardsfinished));
-        console.log("Cards (open):     " + data.cardsopen);
-        console.log("Cards (finished): " + data.cardsfinished);
-        console.log("");
-        console.log("Estimate (total): " + data.estimate);
-        console.log("Estimate (open):  " + (data.estimate - data.estimatedone));
-        console.log("Estimate (done):  " + data.estimatedone);
-        console.log("Effort (total):   " + data.efforttotal);
-        console.log("Diff estimate:    " + (data.estimatedone - data.efforttotal));
-        console.log("----------");
-        console.log("");
-    };
-    
     
     return {
         start : function () {
