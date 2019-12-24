@@ -72,7 +72,7 @@ Here are some examples that are parsed exactly the same way and generating the s
 - go to the sources directory
 - run `npm install` (in package directory, no arguments): Install the dependencies in the local node_modules folder. By default, npm install will install all modules listed as dependencies in package.json.
 
-## 2) Configure the required values in settings.json
+## 2) Configure the required values in settings.json or enviroment vars
 
 This file contains all the settings you need to setup for the app to access your trello boards
 
@@ -97,6 +97,11 @@ The structure of the file is as follows:
     }
 }
 ```
+Or you can also set them on the following enviroment variables (recommended) instead of on the setttings.json file:
+
+TRELLO_APP_KEY = [YOUR_APP_KEY]
+TRELLO_USER_TOKEN = [YOUR_USER_TOKEN]
+TRELLO_BOARD_ID = [YOUR_BOARD_ID]
 
 For a basic setup the only thing you have to do is to obtain from Trello your
 
