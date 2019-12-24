@@ -50,7 +50,7 @@
 			 var chart = null;
 			 function createChart(){
 			 	var data = {
-		  				"xScale": "ordinal",
+		  				"xScale": "linear",
 		  				"yScale": "linear",
 		  				"type": "line-dotted",
 		  				"main": [
