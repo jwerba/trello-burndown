@@ -99,9 +99,9 @@ The structure of the file is as follows:
 ```
 Or you can also set them on the following enviroment variables (recommended) instead of on the setttings.json file:
 
-TRELLO_APP_KEY = [YOUR_APP_KEY]
-TRELLO_USER_TOKEN = [YOUR_USER_TOKEN]
-TRELLO_BOARD_ID = [YOUR_BOARD_ID]
+- TRELLO_APP_KEY = [YOUR_APP_KEY]
+- TRELLO_USER_TOKEN = [YOUR_USER_TOKEN]
+- TRELLO_BOARD_ID = [YOUR_BOARD_ID]
 
 For a basic setup the only thing you have to do is to obtain from Trello your
 
