@@ -18,6 +18,16 @@ var Worker = function Worker() {
     this.counter = 0;
     
     this.trelloInfo = global.settings.trelloInfo; 
+    if (process.env.TRELLO_APP_KEY){
+        this.trelloInfo.applicationKey = process.env.TRELLO_APP_KEY;
+    }
+    if (process.env.TRELLO_USER_TOKEN){
+        this.trelloInfo.userToken = process.env.TRELLO_USER_TOKEN;   
+    }
+    if (process.env.TRELLO_BOARD_ID){
+        this.trelloInfo.boardId = process.env.TRELLO_BOARD_ID;   
+    }
+
     this.repository = Storage.getInstance().getProvider();
 };
 
