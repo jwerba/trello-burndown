@@ -256,3 +256,6 @@ export/config export/stats
 
 # Visual Studio Code
 .vscode/**
+
+# Local Storage of config
+data/**
