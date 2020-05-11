@@ -1,10 +1,10 @@
 {
     "trelloInfo": {
-        "applicationKey": "[YOUR_APP_KEY]",
-        "userToken": "[YOUR_USER_TOKEN]",
-        "boardId": "[YOUR_BOARD_ID]"
+        "applicationKey": "",
+        "userToken": "",
+        "boardId": ""
     },
-    "port": 80,
+    "port": 8080,
     "template": "default_ajax.template",
     "home_template": "home.template",
     "html_title": "Burndown chart generator",
@@ -12,7 +12,7 @@
     "enableWorkers": true,
     "hostWebsite": true,
     "storage": {
-        "provider": "local/fsProvider.js",
+        "strategy": "fileSystem",
         "settings": { }
     }
 }

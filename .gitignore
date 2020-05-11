@@ -253,3 +253,6 @@ paket-files/
 /settings.json.ignore
 settings.json
 export/config export/stats
+
+# Visual Studio Code
+.vscode/**

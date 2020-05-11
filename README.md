@@ -19,7 +19,7 @@ I 've created a new repository because the original project had no activiy for t
 
 * Separation of rendering logic from Trello query and stats building (WebWorker aproach) - automatically checks Trello for the status of the boards
 * Charts automatically refreshes (refresh operation as an AJAX call)
-* Decoupled the persistanse logic - FactoryContainer and a kind of plugin design - Multiple providers (implemented local files and Azure DocumentDB) - You can code your own provider 
+* Decoupled the persistanse logic - FactoryContainer and a kind of plugin design - Multiple providers (implemented local files and Azure DocumentDB) - You can code your own strategy 
 * Now cards moved out of the "Done" list become "unfinished" again
 
 ## Features inherited from the original project
@@ -92,7 +92,7 @@ The structure of the file is as follows:
     "html_header": "Burndown for sprint ",
     "enableWorkers": true,
     "storage": {
-        "provider": "local/fsProvider.js",
+        "strategy": "fileSystem",
         "settings": { }
     }
 }
